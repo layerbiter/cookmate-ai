@@ -10,7 +10,10 @@ async function enableMocking() {
   }
 
   const { worker } = await import('./mocks/browser')
+  
+  // Initialize the MSW worker with the correct options
   return worker.start({
+    onUnhandledRequest: 'bypass',
     serviceWorker: {
       url: '/mockServiceWorker.js'
     }

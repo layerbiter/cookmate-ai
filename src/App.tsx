@@ -1,24 +1,17 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
-import { Auth } from './pages/Auth'
-import { Onboarding } from './pages/Onboarding'
-import { Dashboard } from './pages/Dashboard'
-import { useAuthStore } from './stores/auth'
+import { useState } from 'react'
+import { EmailForm } from './components/EmailForm'
+import { OnboardingForm } from './components/OnboardingForm'
+import { Dashboard } from './components/Dashboard'
 
 function App() {
-  const { isAuthenticated } = useAuthStore()
+  const [currentScreen, setCurrentScreen] = useState<'email' | 'onboarding' | 'dashboard'>('email')
 
   return (
-    <Routes>
-      <Route 
-        path="/" 
-        element={
-          isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/auth" />
-        } 
-      />
-      <Route path="/auth" element={<Auth />} />
-      <Route path="/onboarding" element={<Onboarding />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-    </Routes>
+    <div className="min-h-screen bg-gray-900">
+      {currentScreen === 'email' && <EmailForm onComplete={() => setCurrentScreen('onboarding')} />}
+      {currentScreen === 'onboarding' && <OnboardingForm onComplete={() => setCurrentScreen('dashboard')} />}
+      {currentScreen === 'dashboard' && <Dashboard />}
+    </div>
   )
 }
 

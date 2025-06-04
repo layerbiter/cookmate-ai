@@ -1,20 +1,23 @@
 import { FormEvent, useState } from 'react'
-import { useUserStore } from '../stores/userStore'
 
 interface OnboardingFormProps {
-  onComplete: () => void
+  onComplete: (preferences: {
+    diet: string
+    cuisines: string[]
+    goals: string[]
+  }) => void
 }
 
 export function OnboardingForm({ onComplete }: OnboardingFormProps) {
   const [diet, setDiet] = useState('')
   const [cuisines, setCuisines] = useState<string[]>([])
   const [goals, setGoals] = useState<string[]>([])
-  const setPreferences = useUserStore(state => state.setPreferences)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    setPreferences({ diet, cuisines, goals })
-    onComplete()
+    if (diet && cuisines.length > 0 && goals.length > 0) {
+      onComplete({ diet, cuisines, goals })
+    }
   }
 
   const handleCuisineToggle = (cuisine: string) => {
@@ -101,7 +104,7 @@ export function OnboardingForm({ onComplete }: OnboardingFormProps) {
                      hover:bg-neon-pink transition-colors duration-300
                      focus:outline-none focus:ring-2 focus:ring-neon-blue"
           >
-            Complete Setup
+            Save Preferences
           </button>
         </form>
       </div>

@@ -1,19 +1,28 @@
 import { useState } from 'react'
-import { useUserStore } from '../stores/userStore'
 
-export function Dashboard() {
-  const { email, preferences } = useUserStore()
+interface DashboardProps {
+  userData: {
+    email: string
+    preferences: {
+      diet: string
+      cuisines: string[]
+      goals: string[]
+    }
+  }
+}
+
+export function Dashboard({ userData }: DashboardProps) {
   const [recipe, setRecipe] = useState<{ title: string; ingredients: string[] } | null>(null)
 
   const handleGenerateRecipe = () => {
     setRecipe({
-      title: "Delicious Pasta Primavera",
+      title: "Quick Healthy Stir-Fry",
       ingredients: [
-        "8 oz pasta",
         "2 cups mixed vegetables",
-        "3 cloves garlic",
-        "2 tbsp olive oil",
-        "Salt and pepper to taste"
+        "1 cup protein of choice",
+        "2 tbsp cooking oil",
+        "Soy sauce to taste",
+        "Garlic and ginger"
       ]
     })
   }
@@ -22,15 +31,15 @@ export function Dashboard() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="bg-gray-800 p-8 rounded-2xl shadow-neon w-full max-w-2xl">
         <h1 className="text-2xl font-bold mb-4 text-white">
-          Welcome, {email}!
+          Welcome, {userData.email}!
         </h1>
         
         <div className="mb-6 text-neon-blue">
           <p>Your preferences:</p>
           <ul className="mt-2 space-y-1">
-            <li>Diet: {preferences?.diet}</li>
-            <li>Cuisines: {preferences?.cuisines.join(', ')}</li>
-            <li>Goals: {preferences?.goals.join(', ')}</li>
+            <li>Diet: {userData.preferences.diet}</li>
+            <li>Cuisines: {userData.preferences.cuisines.join(', ')}</li>
+            <li>Goals: {userData.preferences.goals.join(', ')}</li>
           </ul>
         </div>
 

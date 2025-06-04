@@ -1,18 +1,17 @@
 import { FormEvent, useState } from 'react'
-import { useUserStore } from '../stores/userStore'
 
 interface EmailFormProps {
-  onComplete: () => void
+  onComplete: (email: string) => void
 }
 
 export function EmailForm({ onComplete }: EmailFormProps) {
   const [email, setEmail] = useState('')
-  const setUserEmail = useUserStore(state => state.setEmail)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    setUserEmail(email)
-    onComplete()
+    if (email.includes('@')) {
+      onComplete(email)
+    }
   }
 
   return (

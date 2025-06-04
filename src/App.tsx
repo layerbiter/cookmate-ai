@@ -1,22 +1,28 @@
 import { useState } from 'react'
-import { EmailForm } from './components/EmailForm'
-import { OnboardingForm } from './components/OnboardingForm'
+import { EnterEmail } from './components/EnterEmail'
+import { Onboarding } from './components/Onboarding'
+import { SelectProducts } from './components/SelectProducts'
+import { GeneratedRecipe } from './components/GeneratedRecipe'
 import { Dashboard } from './components/Dashboard'
+import './styles.css'
+
+export type Stage = 'email' | 'onboarding' | 'products' | 'recipe' | 'dashboard'
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState<'email' | 'onboarding' | 'dashboard'>('email')
+  const [stage, setStage] = useState<Stage>('email')
   const [userData, setUserData] = useState({
     email: '',
     preferences: {
       diet: '',
       cuisines: [] as string[],
       goals: [] as string[]
-    }
+    },
+    selectedProducts: [] as string[]
   })
 
   const handleEmailSubmit = (email: string) => {
     setUserData(prev => ({ ...prev, email }))
-    setCurrentScreen('onboarding')
+    setStage('onboarding')
   }
 
   const handleOnboardingSubmit = (preferences: {
@@ -25,18 +31,36 @@ function App() {
     goals: string[]
   }) => {
     setUserData(prev => ({ ...prev, preferences }))
-    setCurrentScreen('dashboard')
+    setStage('products')
+  }
+
+  const handleProductsSubmit = (products: string[]) => {
+    setUserData(prev => ({ ...prev, selectedProducts: products }))
+    setStage('recipe')
+  }
+
+  const handleRecipeComplete = () => {
+    setStage('dashboard')
   }
 
   return (
-    <div className="min-h-screen bg-gray-900">
-      {currentScreen === 'email' && (
-        <EmailForm onComplete={handleEmailSubmit} />
+    <div className="app-container">
+      {stage === 'email' && (
+        <EnterEmail onSubmit={handleEmailSubmit} />
       )}
-      {currentScreen === 'onboarding' && (
-        <OnboardingForm onComplete={handleOnboardingSubmit} />
+      {stage === 'onboarding' && (
+        <Onboarding onSubmit={handleOnboardingSubmit} />
       )}
-      {currentScreen === 'dashboard' && (
+      {stage === 'products' && (
+        <SelectProducts onSubmit={handleProductsSubmit} />
+      )}
+      {stage === 'recipe' && (
+        <GeneratedRecipe 
+          userData={userData}
+          onComplete={handleRecipeComplete}
+        />
+      )}
+      {stage === 'dashboard' && (
         <Dashboard userData={userData} />
       )}
     </div>
